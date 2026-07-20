@@ -3,23 +3,29 @@ pipeline {
 
     stages {
 
+        stage('Checkout') {
+            steps {
+                echo 'Checking out latest code...'
+                checkout scm
+            }
+        }
+
+        stage('Show Changes') {
+            steps {
+                echo 'Files changed in this push:'
+                sh '''
+                    git log -1 --stat
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
+                echo 'Building application...'
                 sh 'mvn clean package'
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t hello-world-app:v1 .'
-            }
-        }
-
-        stage('List Docker Images') {
-            steps {
-                sh 'docker images'
-            }
-        }
     }
 
     post {
