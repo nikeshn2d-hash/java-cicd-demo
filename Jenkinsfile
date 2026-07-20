@@ -1,16 +1,10 @@
 pipeline {
     agent any
 
-    tools {
-        maven 'Maven'
-    }
-
     stages {
-
         stage('Checkout') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/nikeshn2d-hash/java-cicd-demo.git'
+                checkout scm
             }
         }
 
@@ -20,17 +14,10 @@ pipeline {
             }
         }
 
-    }
-
-    post {
-
-        success {
-            echo 'Application Built Successfully!'
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t hello-world-app:v1 .'
+            }
         }
-
-        failure {
-            echo 'Build Failed!'
-        }
-
     }
 }
